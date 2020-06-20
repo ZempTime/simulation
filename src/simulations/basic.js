@@ -1,0 +1,38 @@
+import { interpret } from "https://jspm.dev/xstate";
+import { Market } from "../actors/market.js";
+
+/**
+ * There are two kinds of information we can store in XState.
+ *  1) "Finite State," or a deterministic (but nestable) state machine that's represented as a graph (think, "on" or "off" of a lightswitch)
+ *  2) "Extended State," aka, anything arbitrary we might want to store. You can think of this like a plain old javascript object, because it is.
+ */
+
+/**
+ * First, we'll start a "market". This takes the config specified in ../actors/market.js
+ * and starts an instance of it. This will populate a set of agents, and store them in it's own
+ * context inside the `agents` property.
+ */
+
+/**
+ * We can register a callback to let us know any time the state of the market has changed.
+ * In JS you have to declare a function before you use it, we do that here:
+ */
+
+const logMarketState = (state) => {
+  // console.log(state); // this lets you see everything
+  console.log("Number of agents in this market: ", state.context.agents.length);
+
+  // This iterates through market.context.agents, grabbing the `ref` to each agent, so we can
+  // ask it questions. Here, we're wondering "what's your balance?"
+  console.log(
+    "Combined wealth of participating agents: ",
+    state.context.agents.reduce((acc, agent) => {
+      acc += agent.ref.state.context.balance;
+      return acc;
+    }, 0)
+  );
+};
+
+const market = interpret(Market).onTransition(logMarketState).start();
+
+debugger; // you should see this if using launch task
