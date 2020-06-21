@@ -1,5 +1,5 @@
 import { interpret } from "https://jspm.dev/xstate";
-import { Market } from "../actors/market.js";
+import { Market } from "../actors/Market.js";
 
 /**
  * There are two kinds of information we can store in XState.
@@ -19,20 +19,9 @@ import { Market } from "../actors/market.js";
  */
 
 const logMarketState = (state) => {
-  // console.log(state); // this lets you see everything
-  console.log("Number of agents in this market: ", state.context.agents.length);
-
-  // This iterates through market.context.agents, grabbing the `ref` to each agent, so we can
-  // ask it questions. Here, we're wondering "what's your balance?"
-  console.log(
-    "Combined wealth of participating agents: ",
-    state.context.agents.reduce((acc, agent) => {
-      acc += agent.ref.state.context.balance;
-      return acc;
-    }, 0)
-  );
+  console.log("Event occurred: ", state.event.type);
+  console.log("# Bids:", state.context.bids.length);
+  console.log("# Asks:", state.context.asks.length);
 };
 
 const market = interpret(Market).onTransition(logMarketState).start();
-
-debugger; // you should see this if using launch task
